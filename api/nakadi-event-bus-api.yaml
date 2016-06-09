@@ -751,10 +751,9 @@ paths:
       tags:
         - schema-registry-api
       description: |
-        Lists all of the validation strategies supported by this installation of Nakadi.
+        Lists all of the validation strategies supported by this installation of Nakadi. Special or
+        custom validations besides the default will be listed here.
 
-        If the EventType creation is to have special validations (besides the default), one can
-        consult over this method the available possibilities.
       responses:
         '200':
           description: Returns a list of all validation strategies known to Nakadi
