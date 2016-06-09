@@ -753,7 +753,6 @@ paths:
       description: |
         Lists all of the validation strategies supported by this installation of Nakadi. Special or
         custom validations besides the default will be listed here.
-
       responses:
         '200':
           description: Returns a list of all validation strategies known to Nakadi
@@ -775,10 +774,8 @@ paths:
       tags:
         - schema-registry-api
       description: |
-        Lists all of the enrichment strategies supported by this installation of Nakadi.
-
-        If the EventType creation is to have special enrichments (besides the default), one can
-        consult over this method the available possibilities.
+        Lists all of the enrichment strategies supported by this installation of Nakadi. Special or
+        custom enrichments besides the defaults will be listed here.
       responses:
         '200':
           description: Returns a list of all enrichment strategies known to Nakadi
@@ -802,9 +799,7 @@ paths:
         - schema-registry-api
       description: |
         Lists all of the partition resolution strategies supported by this installation of Nakadi.
-
-        If the EventType creation is to have a specific partition strategy (other than the default),
-        one can consult over this method the available possibilities.
+        Special or custom strategies besides the defaults will be listed here.
 
         Nakadi offers currently, out of the box, the following strategies:
 
