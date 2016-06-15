@@ -116,28 +116,6 @@ securityDefinitions:
         Grants access for consuming Event streams.
 
 paths:
-  /metrics:
-    get:
-      tags:
-        - monitoring
-      summary: Get monitoring metrics
-      responses:
-        '200':
-          description: Ok
-          schema:
-            $ref: '#/definitions/Metrics'
-        '401':
-          description: Client is not authenticated
-          schema:
-            $ref: '#/definitions/Problem'
-        '500':
-          description: Server error
-          schema:
-            $ref: '#/definitions/Problem'
-        '503':
-          description: Service (temporarily) unavailable
-          schema:
-            $ref: '#/definitions/Problem'
   /event-types:
     get:
       tags:
@@ -160,14 +138,6 @@ paths:
               $ref: '#/definitions/EventType'
         '401':
           description: Client is not authenticated
-          schema:
-            $ref: '#/definitions/Problem'
-        '500':
-          description: Server error
-          schema:
-            $ref: '#/definitions/Problem'
-        '503':
-          description: Service (temporarily) unavailable
           schema:
             $ref: '#/definitions/Problem'
 
@@ -238,15 +208,6 @@ paths:
           description: Unprocessable Entity
           schema:
             $ref: '#/definitions/Problem'
-        '500':
-          description: Server error
-          schema:
-            $ref: '#/definitions/Problem'
-        '503':
-          description: Service (temporarily) unavailable
-          schema:
-            $ref: '#/definitions/Problem'
-
 
   /event-types/{name}:
     get:
@@ -274,18 +235,6 @@ paths:
             $ref: '#/definitions/EventType'
         '401':
           description: Client is not authenticated
-          schema:
-            $ref: '#/definitions/Problem'
-        '404':
-          description: EventType not found
-          schema:
-            $ref: '#/definitions/Problem'
-        '500':
-          description: Server error
-          schema:
-            $ref: '#/definitions/Problem'
-        '503':
-          description: Service (temporarily) unavailable
           schema:
             $ref: '#/definitions/Problem'
 
@@ -328,20 +277,8 @@ paths:
           description: Client is not authenticated
           schema:
             $ref: '#/definitions/Problem'
-        '404':
-          description: EventType not found.
-          schema:
-              $ref: '#/definitions/Problem'
         '422':
           description: Unprocessable Entity
-          schema:
-            $ref: '#/definitions/Problem'
-        '500':
-          description: Server error
-          schema:
-            $ref: '#/definitions/Problem'
-        '503':
-          description: Service (temporarily) unavailable
           schema:
             $ref: '#/definitions/Problem'
 
@@ -374,22 +311,6 @@ paths:
           description: EventType is successfuly removed
         '401':
           description: Client is not authenticated
-          schema:
-            $ref: '#/definitions/Problem'
-        '403':
-          description: Client is not authorized to perform this operation
-          schema:
-            $ref: '#/definitions/Problem'
-        '404':
-          description: EventType not found.
-          schema:
-              $ref: '#/definitions/Problem'
-        '500':
-          description: Server error
-          schema:
-            $ref: '#/definitions/Problem'
-        '503':
-          description: Service (temporarily) unavailable
           schema:
             $ref: '#/definitions/Problem'
 
@@ -460,22 +381,10 @@ paths:
             type: array
             items:
               $ref: '#/definitions/BatchItemResponse'
-        '400':
-          description: Bad request
-          schema:
-            $ref: '#/definitions/Problem'
         '401':
           description: Client is not authenticated
           schema:
             $ref: '#/definitions/Problem'
-        '404':
-          description: EventType not found.
-          schema:
-              $ref: '#/definitions/Problem'
-        '405':
-          description: Not allowed.
-          schema:
-              $ref: '#/definitions/Problem'
         '422':
           description: |
             At least one event failed to be validated, enriched or partitioned. None were submitted.
@@ -483,14 +392,7 @@ paths:
             type: array
             items:
               $ref: '#/definitions/BatchItemResponse'
-        '500':
-          description: Server error
-          schema:
-            $ref: '#/definitions/Problem'
-        '503':
-          description: Service (temporarily) unavailable
-          schema:
-            $ref: '#/definitions/Problem'
+
     get:
       tags:
         - stream-api
@@ -625,28 +527,8 @@ paths:
             Stream format is a continuous series of `EventStreamBatch`s separated by `\n`
           schema:
             $ref: '#/definitions/EventStreamBatch'
-        '400':
-          description: Bad syntax
-          schema:
-            $ref: '#/definitions/Problem'
         '401':
           description: Not authenticated
-          schema:
-            $ref: '#/definitions/Problem'
-        '404':
-          description: EventType not found
-          schema:
-            $ref: '#/definitions/Problem'
-        '422':
-          description: Unprocessable entity
-          schema:
-            $ref: '#/definitions/Problem'
-        '500':
-          description: Internal Server Error. Details are provided on the returned `Problem`.
-          schema:
-            $ref: '#/definitions/Problem'
-        '503':
-          description: Service (temporarily) unavailable
           schema:
             $ref: '#/definitions/Problem'
 
@@ -685,16 +567,8 @@ paths:
             description: An array of `Partition`s
             items:
               $ref: '#/definitions/Partition'
-        '404':
-          description: EventType not found
-          schema:
-            $ref: '#/definitions/Problem'
-        '500':
-          description: Server error
-          schema:
-            $ref: '#/definitions/Problem'
-        '503':
-          description: Service (temporarily) unavailable
+        '401':
+          description: Not authenticated
           schema:
             $ref: '#/definitions/Problem'
 
@@ -734,18 +608,6 @@ paths:
           description: Client is not authenticated
           schema:
             $ref: '#/definitions/Problem'
-        '404':
-          description: Not found
-          schema:
-            $ref: '#/definitions/Problem'
-        '500':
-          description: Server error
-          schema:
-            $ref: '#/definitions/Problem'
-        '503':
-          description: Service (temporarily) unavailable
-          schema:
-            $ref: '#/definitions/Problem'
 
   '/registry/validation-strategies':
     get:
@@ -763,12 +625,8 @@ paths:
             type: array
             items:
               type: string
-        '500':
-          description: Server error
-          schema:
-            $ref: '#/definitions/Problem'
-        '503':
-          description: Service (temporarily) unavailable
+        '401':
+          description: Not authenticated
           schema:
             $ref: '#/definitions/Problem'
 
@@ -788,12 +646,8 @@ paths:
             type: array
             items:
               type: string
-        '500':
-          description: Server error
-          schema:
-            $ref: '#/definitions/Problem'
-        '503':
-          description: Service (temporarily) unavailable
+        '401':
+          description: Not authenticated
           schema:
             $ref: '#/definitions/Problem'
 
@@ -829,8 +683,8 @@ paths:
             type: array
             items:
               type: string
-        '500':
-          description: Server error
+        '401':
+          description: Not authenticated
           schema:
             $ref: '#/definitions/Problem'
 
@@ -856,135 +710,118 @@ definitions:
 
       For concrete examples of what will be enforced by Nakadi see the objects BusinessEvent and
       DataChangeEvent below.
-    additionalProperties: true
 
   EventMetadata:
     type: object
-    description: |
-      Metadata for this Event.
-
-      Contains commons fields for both Business and DataChange Events. Most are enriched by Nakadi
-      upon reception, but they in general MIGHT be set by the client.
     properties:
-      metadata:
-        type: object
-        properties:
-          eid:
-            description: |
-              Identifier of this Event.
+      eid:
+        description: |
+          Identifier of this Event.
 
-              Clients MUST generate this value and it SHOULD be guaranteed to be unique from the
-              perspective of the producer. Consumers MIGHT use this value to assert uniqueness of
-              reception of the Event.
-            type: string
-            format: uuid
-            example: '105a76d8-db49-4144-ace7-e683e8f4ba46'
-          event_type:
-            description: |
-              The EventType of this Event. This is enriched by Nakadi on reception of the Event
-              based on the endpoint where the Producer sent the Event to.
+          Clients MUST generate this value and it SHOULD be guaranteed to be unique from the
+          perspective of the producer. Consumers MIGHT use this value to assert uniqueness of
+          reception of the Event.
+        type: string
+        format: uuid
+        example: '105a76d8-db49-4144-ace7-e683e8f4ba46'
+      event_type:
+        description: |
+          The EventType of this Event. This is enriched by Nakadi on reception of the Event
+          based on the endpoint where the Producer sent the Event to.
 
-              If provided MUST match the endpoint. Failure to do so will cause rejection of the
-              Event.
-            type: string
-            example: 'pennybags.payment-business-event'
-          occurred_at:
-            description: |
-              Timestamp of creation of the Event generated by the producer.
-            type: string
-            format: date-time
-            example: '1996-12-19T16:39:57-08:00'
-          received_at:
-            type: string
-            description: |
-              Timestamp of the reception of the Event by Nakadi. This is enriched upon reception of
-              the Event.
-              If set by the producer Event will be rejected.
-            format: date-time
-            example: '1996-12-19T16:39:57-08:00'
-          parent_eids:
-            type: array
-            items:
-              type: string
-              format: uuid
-              description: |
-                Event identifier of the Event that caused the generation of this Event.
-                Set by the producer.
-              example: '105a76d8-db49-4144-ace7-e683e8f4ba46'
-          flow_id:
-            description: |
-              The flow-id of the producer of this Event. As this is usually a HTTP header, this is
-              enriched from the header into the metadata by Nakadi to avoid clients having to
-              explicitly copy this.
-            type: string
-            example: 'JAh6xH4OQhCJ9PutIV_RYw'
-          partition:
-            description: |
-              Indicates the partition assigned to this Event.
+          If provided MUST match the endpoint. Failure to do so will cause rejection of the
+          Event.
+        type: string
+        example: 'pennybags.payment-business-event'
+      occurred_at:
+        description: |
+          Timestamp of creation of the Event generated by the producer.
+        type: string
+        format: date-time
+        example: '1996-12-19T16:39:57-08:00'
+      received_at:
+        type: string
+        description: |
+          Timestamp of the reception of the Event by Nakadi. This is enriched upon reception of
+          the Event.
+          If set by the producer Event will be rejected.
+        format: date-time
+        example: '1996-12-19T16:39:57-08:00'
+      parent_eids:
+        type: array
+        items:
+          type: string
+          format: uuid
+          description: |
+            Event identifier of the Event that caused the generation of this Event.
+            Set by the producer.
+          example: '105a76d8-db49-4144-ace7-e683e8f4ba46'
+      flow_id:
+        description: |
+          The flow-id of the producer of this Event. As this is usually a HTTP header, this is
+          enriched from the header into the metadata by Nakadi to avoid clients having to
+          explicitly copy this.
+        type: string
+        example: 'JAh6xH4OQhCJ9PutIV_RYw'
+      partition:
+        description: |
+          Indicates the partition assigned to this Event.
 
-              Required to be set by the client if partition strategy of the EventType is
-              'user_defined'.
-            type: string
-            example: '0'
-        required:
-          - eid
-          - occurred_at
-
-        additionalProperties: false
-
+          Required to be set by the client if partition strategy of the EventType is
+          'user_defined'.
+        type: string
+        example: '0'
     required:
-      - metadata
+      - eid
+      - occurred_at
 
   BusinessEvent:
-    type: object
     description: |
       A Business Event.
 
-      Usually represents a status transition in a Business process.
-    allOf:
-      - $ref: '#/definitions/EventMetadata'
-    additionalProperties: true
-
-  DataChangeEventQualifier:
-    type: object
-    description: |
-      Indicators of a `DataChangeEvent`'s referred data type and the type of operations done on
-      them.
-
-    properties:
-      data_type:
-        type: string
-        example: 'pennybags:order'
-      data_op:
-        type: string
-        enum: ['C', 'U', 'D', 'S']
-        description: |
-          The type of operation executed on the entity.
-          * C: Creation
-          * U: Update
-          * D: Deletion
-          * S: Snapshot
-    required:
-      - data_type
-      - data_op
+      Usually represents a status transition in a Business process.    
+    allOf:  
+      - $ref: '#/definitions/Event'
+      - type: object
+        properties:
+          metadata:
+              $ref: '#/definitions/EventMetadata'
+        required:
+            - metadata
 
   DataChangeEvent:
-    type: object
     description: |
       A Data change Event.
 
-      Represents a change on a resource.
+      Represents a change on a resource. Also contains indicators for the data 
+      type and the type of operation performed.
     allOf:
-      - $ref: '#/definitions/DataChangeEventQualifier'
-      - $ref: '#/definitions/EventMetadata'
-    properties:
-      data:
-        type: object
-        description: |
-            The payload of the type
-    required:
-        - data
-    additionalProperties: false
+      - $ref: '#/definitions/Event'
+      - type: object        
+        properties:
+          data_type:
+            type: string
+            example: 'pennybags:order'
+          data_op:
+            type: string
+            enum: ['C', 'U', 'D', 'S']
+            description: |
+              The type of operation executed on the entity.
+              * C: Creation
+              * U: Update
+              * D: Deletion
+              * S: Snapshot
+          metadata:
+            $ref: '#/definitions/EventMetadata'
+          data:
+            type: object
+            description: |
+                The payload of the type
+        required:
+            - data
+            - metadata
+            - data_type
+            - data_op
 
   Problem:
     type: object
@@ -1024,9 +861,6 @@ definitions:
       - type
       - title
       - status
-
-  Metrics:
-    type: object
 
   Partition:
     description: |
@@ -1193,8 +1027,7 @@ definitions:
 
       schema:
         type: object
-        allOf:
-          - $ref: '#/definitions/EventTypeSchema'
+        $ref: '#/definitions/EventTypeSchema'
         description: |
           The schema for this EventType. Submitted events will be validated against it.
 
@@ -1220,12 +1053,12 @@ definitions:
 
       default_statistics:
         type: object
-        allOf:
-          - $ref: '#/definitions/EventTypeStatistics'
+        $ref: '#/definitions/EventTypeStatistics'
         description: |
           Statistics of this EventType used for optimization purposes. Internal use of these values
           might change over time.
           (TBD: measured statistics)
+        readOnly: true
 
     required:
       - name
@@ -1259,7 +1092,6 @@ definitions:
     description: |
       Operational statistics for an EventType. This data is generated by Nakadi based on the runtime
       and might be used to guide changes in internal parameters.
-
     properties:
       messages_per_minute:
         type: integer
@@ -1268,19 +1100,16 @@ definitions:
           EventType for a Nakadi cluster.
 
           Measured in event count per minute.
-
       message_size:
         type: integer
         description: |
           Average message size for each Event of this EventType. Includes in the count the whole serialized
           form of the event, including metadata.
           Measured in bytes.
-
       read_parallelism:
         type: integer
         description: |
           Amount of parallel readers (consumers) to this EventType.
-
       write_parallelism:
         type: integer
         description: |
