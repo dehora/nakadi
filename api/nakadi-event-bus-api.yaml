@@ -932,6 +932,7 @@ definitions:
           - undefined
           - data
           - business
+          - envelope
         description: |
           Defines the category of this EventType.
 
@@ -950,6 +951,14 @@ definitions:
             validation contains `metadata` and any additionally defined properties passed in the
             `EventTypeSchema` directly on top level of the Event. If name conflicts arise, creation
             of this EventType will be rejected. 
+
+          - `envelope`: These are `Envelope` structures. Validation is applied to the Envelope 
+            in two stages. First the envelope structure is validated. Second, its `data.content` is 
+            validated against the event type's schema definition after being unpacked according to 
+            the `data.content_encoding` and `data.content_type` values. As a result, envelopes do 
+            not have effective schema. What can be sent via an Envelope is currently constrained by 
+            the event type's dependency on JSON Schema, but the structure is capable of carrying any
+            media type entity via its `data.content_encoding` support.
 
       enrichment_strategies:
         description: |
@@ -1118,3 +1127,153 @@ definitions:
           should have a description.
     required:
       - publishing_status
+
+
+  Envelope:
+    type: object
+    description: | 
+      Envelope is a common structure for carrying events. 
+
+      Custom event data is defined in the `data` field. Data is transferred as a string, and is 
+      described using a `content_type`, representing its media type, and a `content_encoding`, which
+      represents how it is encoded as a string. For example event data may have an application/json 
+      content type, and a base 64 content encoding. Alternatively the media could be binary data. 
+      This allows the envelope to carry arbitrary data.
+
+      The metadata field defines common items that allow producers and consumers to coordinate. In 
+      particular producers must submit event envelopes with an `id` and an `occurred_at` field. The 
+      metadata field may also contain header data plucked from the producer request, such as 
+      X-Flow-Id. All X- headers in a producer request are propagated by the server.
+
+      As well as data, producers may also transfer string keys and values via the `properties` 
+      field. These keys and values are arbitrary and have no constraints or validations applied to 
+      them as a function of the event type. The server may reject an envelope that has property 
+      values which are not strings.
+
+      A main difference to the other category structures is that envelope allows validation and 
+      enrichment of events without requiring them to be domain specific business/data change models;
+      equally envelope can be used to create undefined-like events but still have standard metadata.
+      As such, envelope can be considered a general purpose hammer for publishing events and data.
+    additionalProperties: true
+    required:
+      - metadata
+      - data
+      - properties
+    properties:
+      data:      
+        $ref: "#/definitions/EnvelopeData"       
+      metadata:      
+        $ref: "#/definitions/EnvelopeMetadata"
+      attributes:     
+        type: object 
+        description: | 
+          A map of string keys and values, set by the producer. The entries here
+          are undefined and are not validated or checked by the server. A server
+          may reject an envelope with attribute values that are not strings.
+        additionalProperties: 
+          type: string
+
+  EnvelopeData:
+    type: object
+    description: | 
+      Houses events and describes their encoding and media type. Event data is 
+      always transferred as a string, which may be unpacked according to the 
+      content encoding and type declarations. Nested JSON objects are not 
+      supported to avoid mixing common and custom information in the same JSON 
+      object and parse step. In turn this allows a more flexible range of 
+      representations, at the cost of encoding as base64 or escaped json, 
+      and avoids having to define a runtime effective schema that is not 
+      directly available or described via the registry APIs. 
+    additionalProperties: true
+    required:
+      - content_type
+      - content_encoding
+      - content
+    properties:
+      content_type: 
+        description: |
+          A media type describing the content representation. This is an analog 
+          to the HTTP Content-Type header.
+        type: string
+        example: "application/json;charset=utf8"
+      content_encoding:   
+        description: |
+          An encoding modifier to let event content be transferred as a string. 
+          This is an analog to the HTTP Content-Encoding header, and which allows 
+          a broader range of values. 
+
+            - base64: allows arbitrary content such as binary data or raw json.
+            
+            - base64_gzip: also allows arbitrary content, but which is 
+              compressed first using gzip.
+            
+            - identity: the media-type can be applied directly. 
+            
+            - beq: backslash escaped double quotes. This is a convenience that 
+              allows data such as json or html to be sent as clear text without 
+              needing base64. 
+
+          Note that not all combinations work with all media types.
+
+          Producers must use one of the above types to encode the event content,
+          no default value is assumed.
+        type: string    
+        enum: ['base64', 'base64_gzip', 'identity', 'beq']           
+      content:
+        description: |
+          The event 'payload' being published. The content is intepreted using 
+          the media type value in `content_type` after the `content_encoding` 
+          has been applied.
+        type: string 
+
+  EnvelopeMetadata:
+    type: object
+    description: EnvelopeMetadata
+    additionalProperties: true
+    properties:
+      id: 
+        description: |
+          The publisher defined identifier for this event.
+        type: string    
+      occurred_at:    
+        description: | 
+          Time of creation of the message, generated by the producer.
+        type: string    
+        format: date-time
+      published_at:    
+        description: | 
+          Time at which the message was published, set by the server. The server
+          may reject requests that contain a value, or may replace it.
+        type: string    
+        format: date-time
+        readOnly: true
+      partition_id:    
+        description: |
+          The partition to send the event. This supersedes the partition_key if
+          both are sent.
+        type: string
+      partition_key:
+        description: |
+          Used to hash the event to a partition. This is honored over the 
+          partitioning strategy defined in the event type. The reason this 
+          field exists is that it does not require the server to understand 
+          arbitrary field data - the event type's `partition_key_fields` assumes 
+          the server can read any kind of content, which doesn't generalise 
+          beyond well known formats such as the current json-schema support. 
+        type: string
+      parent_ids:  
+        description: |
+          The events that caused (happened before) this event.
+        type: array
+        items:
+          type: string
+      headers:     
+        description: |
+          Headers propagated from the producer request. All `X-` headers in the 
+          event producer request are propagated, other headers may be propagated
+          at the server's discretion. 
+        type: object 
+        readOnly: true
+        additionalProperties: 
+          type: string
+
