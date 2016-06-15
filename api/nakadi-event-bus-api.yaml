@@ -1158,8 +1158,7 @@ definitions:
 
       schema:
         type: object
-        allOf:
-          - $ref: '#/definitions/EventTypeSchema'
+        $ref: '#/definitions/EventTypeSchema'
         description: |
           The schema for this EventType. Submitted events will be validated against it.
 
@@ -1185,8 +1184,7 @@ definitions:
 
       default_statistics:
         type: object
-        allOf:
-          - $ref: '#/definitions/EventTypeStatistics'
+        $ref: '#/definitions/EventTypeStatistics'
         description: |
           Statistics of this EventType used for optimization purposes. Internal use of these values
           might change over time.
