@@ -1154,7 +1154,6 @@ definitions:
       enrichment of events without requiring them to be domain specific business/data change models;
       equally envelope can be used to create undefined-like events but still have standard metadata.
       As such, envelope can be considered a general purpose hammer for publishing events and data.
-    additionalProperties: true
     required:
       - metadata
       - data
@@ -1184,7 +1183,6 @@ definitions:
       representations, at the cost of encoding as base64 or escaped json, 
       and avoids having to define a runtime effective schema that is not 
       directly available or described via the registry APIs. 
-    additionalProperties: true
     required:
       - content_type
       - content_encoding
@@ -1217,8 +1215,7 @@ definitions:
 
           Producers must use one of the above types to encode the event content,
           no default value is assumed.
-        type: string    
-        enum: ['base64', 'base64_gzip', 'identity', 'beq']           
+        type: string
       content:
         description: |
           The event 'payload' being published. The content is intepreted using 
@@ -1229,7 +1226,6 @@ definitions:
   EnvelopeMetadata:
     type: object
     description: EnvelopeMetadata
-    additionalProperties: true
     properties:
       id: 
         description: |
@@ -1271,7 +1267,8 @@ definitions:
         description: |
           Headers propagated from the producer request. All `X-` headers in the 
           event producer request are propagated, other headers may be propagated
-          at the server's discretion. 
+          at the server's discretion or as defined in other metadata such as the 
+          event type description. 
         type: object 
         readOnly: true
         additionalProperties: 
