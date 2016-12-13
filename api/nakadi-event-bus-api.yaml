@@ -1184,10 +1184,21 @@ definitions:
       and avoids having to define a runtime effective schema that is not 
       directly available or described via the registry APIs. 
     required:
+      - content_definition
       - content_type
       - content_encoding
       - content
     properties:
+      content_extension: 
+        description: |
+          An extension point describing the content's extension. This allows 
+          teams to define domain specific types (eg a category). This idea is 
+          incomplete and needs work; xref against Olaf's meta-driven stuff and
+          do some more research on extending json (eg can this be done through 
+          schema extensions).
+        type: object
+        additionalProperties: 
+          type: string
       content_type: 
         description: |
           A media type describing the content representation. This is an analog 
@@ -1270,7 +1281,6 @@ definitions:
           at the server's discretion or as defined in other metadata such as the 
           event type description. 
         type: object 
-        readOnly: true
         additionalProperties: 
           type: string
 
