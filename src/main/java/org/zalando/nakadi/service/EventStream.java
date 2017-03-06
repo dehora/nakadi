@@ -2,6 +2,7 @@ package org.zalando.nakadi.service;
 
 import com.codahale.metrics.Meter;
 import com.google.common.collect.Lists;
+import java.nio.charset.StandardCharsets;
 import org.apache.kafka.common.KafkaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.zalando.nakadi.util.FeatureToggleService;
 import org.zalando.nakadi.view.Cursor;
 
 import static java.lang.System.currentTimeMillis;
@@ -29,24 +31,28 @@ public class EventStream {
     public static final String BATCH_SEPARATOR = "\n";
     public static final Charset UTF8 = Charset.forName("UTF-8");
 
+
     private final OutputStream outputStream;
     private final EventConsumer eventConsumer;
     private final EventStreamConfig config;
     private final BlacklistService blacklistService;
     private final CursorConverter cursorConverter;
     private final Meter bytesFlushedMeter;
+    private final FeatureToggleService featureToggleService;
 
     public EventStream(final EventConsumer eventConsumer,
                        final OutputStream outputStream,
                        final EventStreamConfig config,
                        final BlacklistService blacklistService,
-                       final CursorConverter cursorConverter, final Meter bytesFlushedMeter) {
+                       final CursorConverter cursorConverter, final Meter bytesFlushedMeter,
+                       final FeatureToggleService featureToggleService) {
         this.eventConsumer = eventConsumer;
         this.outputStream = outputStream;
         this.config = config;
         this.blacklistService = blacklistService;
         this.cursorConverter = cursorConverter;
         this.bytesFlushedMeter = bytesFlushedMeter;
+        this.featureToggleService = featureToggleService;
     }
 
     public void streamEvents(final AtomicBoolean connectionReady) {
@@ -158,7 +164,7 @@ public class EventStream {
     }
 
     private void sendBatch(final NakadiCursor topicPosition, final List<String> currentBatch)
-            throws IOException {
+        throws IOException {
         // create stream event batch for current partition and send it; if there were
         // no events, it will be just a keep-alive
         final String streamEvent = createStreamEvent(cursorConverter.convert(topicPosition), currentBatch);
