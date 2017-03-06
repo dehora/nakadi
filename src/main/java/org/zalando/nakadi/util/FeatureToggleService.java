@@ -31,7 +31,8 @@ public interface FeatureToggleService {
         CHECK_OWNING_APPLICATION("check_owning_application"),
         LIMIT_CONSUMERS_NUMBER("limit_consumers_number"),
         ZERO_PADDED_OFFSETS("zero_padded_offsets"),
-        SEND_BATCH_VIA_OUTPUT_STREAM("send_batch_via_output_stream");
+        SEND_BATCH_VIA_OUTPUT_STREAM("send_batch_via_output_stream"),
+        SEND_SUBSCRIPTION_BATCH_VIA_OUTPUT_STREAM("send_subscription_batch_via_output_stream");
 
         private final String id;
 
