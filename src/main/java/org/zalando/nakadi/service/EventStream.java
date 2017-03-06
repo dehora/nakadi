@@ -180,7 +180,7 @@ public class EventStream {
     }
 
     private void sendBatch(final NakadiCursor topicPosition, final List<String> currentBatch)
-        throws IOException {
+            throws IOException {
         if(featureToggleService.isFeatureEnabled(FeatureToggleService.Feature.SEND_BATCH_VIA_OUTPUT_STREAM)) {
             writeStreamEvent(outputStream, cursorConverter.convert(topicPosition), currentBatch);
         } else {
@@ -195,7 +195,7 @@ public class EventStream {
     }
 
     private void writeStreamEvent(final OutputStream os, final Cursor cursor, final List<String> events)
-        throws IOException {
+            throws IOException {
 
         int byteCount = B_FIXED_BYTE_COUNT;
 
